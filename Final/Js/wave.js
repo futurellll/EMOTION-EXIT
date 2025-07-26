@@ -77,6 +77,30 @@ async function fetchData() {
   }
 }
 
+function resetAllWaveforms() {
+    // 1. 重置外部数据存储为0
+    Object.keys(externalData).forEach(key => {
+        externalData[key] = 0;
+    });
+
+    // 2. 逐个处理每个波形图实例
+    waveInstances.forEach(wave => {
+        // 强制所有历史数据点为0
+        wave.waveData = wave.waveData.map(() => 0);
+        
+        // 重置显示值为0.0
+        wave.valueDisplay.textContent = '0.0';
+        
+        // 标记使用外部数据（确保后续数据更新正常）
+        wave.useExternalData = true;
+        
+        // 立即重新绘制波形（无论是否在运行状态）
+        wave.drawWave();
+    });
+
+    console.log('所有波形图已清零');
+}
+
 // 波形图类
 class Waveform {
     constructor(id, title, lineColor, fillColor, dataSource) {
@@ -134,7 +158,7 @@ class Waveform {
         const pointsCount = Math.ceil(this.canvas.width / config.pointSpacing) + 1;
         
         for (let i = 0; i < pointsCount; i++) {
-            this.waveData.push(this.getRandomValue());
+            this.waveData.push(0);
         }
     }
     
@@ -307,19 +331,24 @@ function toggleAllWaveforms() {
     
     const toggleBtn = document.getElementById('toggleAllBtn');
     if (!newState) {
-        dataGetTimer = setInterval(function(){
-        updateAllWaveformsWithExternalData(fetchData());
-        }, 1000);
-        toggleBtn.querySelector('span').textContent = '全部开始';
-        toggleBtn.querySelector('i').className = 'fa fa-play mr-2';
-        toggleBtn.classList.add('bg-primary', 'hover:bg-primary/90');
-        toggleBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-    } else {
         clearInterval(dataGetTimer);
+        resetAllWaveforms();
         toggleBtn.querySelector('span').textContent = '全部暂停';
         toggleBtn.querySelector('i').className = 'fa fa-pause mr-2';
         toggleBtn.classList.add('bg-red-500', 'hover:bg-red-600');
         toggleBtn.classList.remove('bg-primary', 'hover:bg-primary/90');
+        document.getElementById("mainButton").innerHTML = "Get Started";
+
+
+    } else {
+        dataGetTimer = setInterval(function(){
+        updateAllWaveformsWithExternalData(fetchData());
+        }, config.updateInterval);
+        toggleBtn.querySelector('span').textContent = '全部开始';
+        toggleBtn.querySelector('i').className = 'fa fa-play mr-2';
+        toggleBtn.classList.add('bg-primary', 'hover:bg-primary/90');
+        toggleBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+        document.getElementById("mainButton").innerHTML = "Shut Up";
     }
 }
 

@@ -176,13 +176,7 @@ function sendDeviceList() {
   }
   
   mainWindow.webContents.send('device-list', devices);
-
-
 }
-
-
-
-
 
 // 处理前端命令
 ipcMain.on('send-to-device', (event, { deviceId, message }) => {
