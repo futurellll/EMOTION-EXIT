@@ -1,24 +1,40 @@
 # emotion_client.py
-import os
 import cv2
 import numpy as np
-from keras.models import Sequential, load_model
-
-LABELS = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
-WEIGHTS_PATH = os.path.join(os.path.dirname(__file__), "model", "best_model_CNN_RGB_size96.h5")
+from deepface import DeepFace
 
 class EmotionClient:
-    def __init__(self):
-        self.model = load_model(WEIGHTS_PATH)
+    def __init__(self, threshold=0.5):
+        self.threshold = threshold  # 最小置信度
+        self.last_emotion = None    # 可用于平滑
 
     def predict(self, frame: np.ndarray) -> dict:
-        img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        img_resized = cv2.resize(img_rgb, (96, 96))
-        img_input = np.expand_dims(img_resized, axis=0) / 255.0  # 归一化
+        # DeepFace 默认输入 BGR，所以可以直接用 OpenCV 的 frame
+        try:
+            result = DeepFace.analyze(
+                frame,
+                actions=['emotion'],
+                enforce_detection=False
+            )
+            emotions = result[0]['emotion']
+            dominant_emotion = result[0]['dominant_emotion']
+            confidence = emotions[dominant_emotion] / 100.0  # 百分比转小数
 
-        preds = self.model(img_input, training=False).numpy()[0]
-        emotion_idx = np.argmax(preds)
-        return {
-            "emotion": LABELS[emotion_idx],
-            "score": float(preds[emotion_idx])
-        }
+            if confidence < self.threshold:
+                # 如果低于阈值，可选择输出中性或保留上一次
+                emotion = "neutral"
+            else:
+                emotion = dominant_emotion
+
+            self.last_emotion = emotion
+            return {
+                "emotion": emotion,
+                "score": round(confidence, 4)
+            }
+        except Exception as e:
+            print("[EmotionClient] Error:", e)
+            return {
+                "emotion": self.last_emotion or "neutral",
+                "score": 0.0
+            }
+

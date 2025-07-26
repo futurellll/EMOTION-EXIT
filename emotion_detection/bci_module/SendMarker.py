@@ -6,15 +6,12 @@ from pylsl import StreamInfo, StreamOutlet, local_clock
 def get_epoch_now():
     return time.time()
 
-def main():
-    print("Choose an option:")
-    print("1: Send markers right away without a specific timestamp (recommended)")
-    print("2: Send markers with a specific timestamp")
+def start_lsl():
 
     # User input for option
     while True:
         try:
-            option = int(input("Enter your choice (1 or 2): "))
+            option = 1
             if option == 1 or option == 2:
                 break
             else:
@@ -60,5 +57,3 @@ def main():
         marker_value += 1
         time.sleep(2)  # Wait for 2 seconds
     
-if __name__ == "__main__":
-    main()
