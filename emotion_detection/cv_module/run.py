@@ -4,7 +4,7 @@ import time
 import threading
 
 emotion_state = {
-    "emotion": "neutral",
+    "emotion": "angry",
     "timestamp": time.time()
 }
 state_lock = threading.Lock()
@@ -28,6 +28,6 @@ def get_emotion_type():
 def start_cv_service():
 
     print("[启动] 摄像头情绪识别服务，每5秒采样一帧")
-    start_camera_loop(echo, interval_sec=3)
+    start_camera_loop(callback, interval_sec=3)
 
     

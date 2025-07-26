@@ -3,7 +3,7 @@ from bci_module.RecieveData import get_emotion_level
 from cv_module.run import get_emotion_type
 from datetime import datetime, timedelta
 from backend.llm import generate_emotion_report
-
+import random
 app = FastAPI()
 
 # ====== 测试会话缓存 ======
@@ -13,7 +13,7 @@ test_data_log = []
 test_success = False
 test_done = False
 generated_text = ""
-
+success_data = []
 def data_process(emotion_level, emotion_type='neutral'):
     """
     计算情绪强度，用于脑控反馈。
@@ -76,7 +76,7 @@ def data_process(emotion_level, emotion_type='neutral'):
         intensity = norm_score * boost
         return round(min(intensity, 1.0), 3)
 
-    return 0.0
+    return round(random.uniform(0, 1), 2)
 
 
 @app.get('/ping')
@@ -110,16 +110,17 @@ async def get_emotion():
 
     if test_active:
         now = datetime.now()
-        test_data_log.append({
+        entry = {
             "time": now.strftime("%H:%M:%S"),
             "bci": emotion_level,
             "cv": emotion_type,
             "intensity": intensity
-        })
-
+        }
+        test_data_log.append(entry)
         if intensity >= 0.85:
             test_success = True
             test_active = False
+            success_data.append(entry)  
         elif now - test_start_time > timedelta(minutes=2):
             test_success = False
             test_active = False
@@ -146,8 +147,8 @@ async def get_text():
         f"[{item['time']}] Intensity: {item['intensity']}, CV: {item['cv']}, BCI: {item['bci']}"
         for item in test_data_log
     ])
-
-    text = generate_emotion_report(log_summary)
+    
+    text = generate_emotion_report(log_summary, success_data)
     test_done = True
 
     return {"text": text}
