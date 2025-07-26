@@ -38,7 +38,7 @@ function refreshDevice2Win(deviceList){
 }
 
 window.electronAPI.onDeviceList((devices) => {
-    console.log(devices[0]);
+    //console.log(devices[0]);
     for(let i = 0; i < devices.length; i++){
         //espDeviceList[i] = devices[i];
         console.log(devices[i]["name"]);
@@ -51,15 +51,15 @@ window.electronAPI.onDeviceList((devices) => {
     }
     refreshDevice2Win(espDeviceElementList);
 
-    plusButton.onclick = function(){
-        window.electronAPI.sendToDevice(devices[0]["id"], "LED_ON\n");
-    }
-    mainButton.onclick = function(){
-        window.electronAPI.sendToDevice(devices[1]["id"], "LED_ON\n")
-    }
-    thirdButton.onclick = function(){
-        window.electronAPI.sendToDevice(devices[2]["id"], "LED_ON\n")
-    }
+    // plusButton.onclick = function(){
+    //     window.electronAPI.sendToDevice(devices[0]["id"], "LED_ON\n");
+    // }
+    // mainButton.onclick = function(){
+    //     window.electronAPI.sendToDevice(devices[1]["id"], "LED_ON\n")
+    // }
+    // thirdButton.onclick = function(){
+    //     window.electronAPI.sendToDevice(devices[2]["id"], "LED_ON\n")
+    // }
 });
 
 
