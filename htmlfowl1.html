@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>后端驱动的进度条示例（仅 HTML）</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; }
+    #progress-container { width: 100%; background: #eee; border-radius: 4px; overflow: hidden; }
+    #progress-bar {
+      width: 0;
+      height: 20px;
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      transition: width 0.4s ease;
+    }
+    #status { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>任务进度</h1>
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="status">等待进度...</div>
+
+  <script>
+    // 使用 Server-Sent Events 接收后端推送的进度
+    const evtSource = new EventSource('/progress');
+    const bar = document.getElementById('progress-bar');
+    const status = document.getElementById('status');
+
+    evtSource.onmessage = (e) => {
+      const pct = parseInt(e.data, 10);
+      bar.style.width = pct + '%';
+      status.textContent = `已完成 ${pct}%`;
+    };
+
+    evtSource.addEventListener('done', () => {
+      status.textContent = '任务完成！';
+      evtSource.close();
+    });
+
+    evtSource.onerror = () => {
+      status.textContent = '连接出错，已停止接收进度。';
+      evtSource.close();
+    };
+  </script>
+</body>
+</html>
