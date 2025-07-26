@@ -1,57 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多波形图网格布局</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981',
-                        dark: '#1E293B',
-                        darkBg: '#0F172A',
-                        darkCard: '#000000',
-                        darkBorder: '#000000',
-                        darkGrid: '#334155',
-                    },
-                    fontFamily: {
-                        inter: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-        }
-    </style>
-</head>
-<body class="bg-darkBg font-inter min-h-screen flex items-center justify-center p-4 text-gray-100">
-    <div class="w-full max-w-4xl">
-        <h1 class="text-center text-xl font-bold text-white mb-6">多波形图显示</h1>
-        
-        <div id="waveContainer" class="grid grid-cols-3 gap-[20px]">
-            <!-- 波形图将通过JS动态生成 -->
-        </div>
-        
-        <div class="mt-6 flex justify-center">
-            <button id="toggleAllBtn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm transition-all flex items-center">
-                <i class="fa fa-play mr-2"></i> <span>全部开始</span>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        // 全局配置参数
+// 全局配置参数
         const config = {
             canvasWidth: 220,
             canvasHeight: 135,
@@ -289,7 +236,3 @@
 
         // 页面加载完成后初始化
         $(document).ready(initAllWaveforms);
-    </script>
-</body>
-</html>
-    
