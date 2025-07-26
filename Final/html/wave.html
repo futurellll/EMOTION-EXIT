@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态波形图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        dark: '#1E293B',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter min-h-screen flex items-center justify-center p-4">
+    <div class="flex flex-col items-center gap-2">
+        <div class="flex justify-between w-full max-w-[220px] px-1">
+            <h2 class="text-sm font-semibold text-dark">emotion</h2>
+            <span id="latestValue" class="text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">0.0</span>
+        </div>
+        
+        <div class="relative w-[220px] h-[135px] bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <canvas id="waveCanvas" class="absolute inset-0"></canvas>
+        </div>
+        
+        <button id="toggleBtn" class="bg-primary hover:bg-primary/90 text-white px-3 py-1 rounded text-xs transition-all flex items-center">
+            <i class="fa fa-play mr-1 text-xs"></i> <span id="btnText">开始</span>
+        </button>
+    </div>
+
+    <script>
+        // 配置参数 - 方便修改
+        const config = {
+            canvasWidth: 220,
+            canvasHeight: 135,
+            updateInterval: 150, // 更新间隔(ms)
+            maxValue: 100, // 最大值
+            pointSpacing: 10, // 点间距和网格大小
+            lineColor: '#3B82F6', // 折线颜色
+            fillColor: 'rgba(59, 130, 246, 0.3)', // 填充颜色，与折线相同但透明度更高
+            gridColor: '#e5e7eb', // 网格颜色
+        };
+
+        $(document).ready(function() {
+            // 画布设置
+            const canvas = document.getElementById('waveCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置画布尺寸
+            canvas.width = config.canvasWidth;
+            canvas.height = config.canvasHeight;
+            
+            // 波形数据
+            let waveData = [];
+            let isRunning = false;
+            let animationId = null;
+            
+            // 初始化波形数据
+            function initWaveData() {
+                waveData = [];
+                // 计算需要的点数，确保两端点在边缘
+                const pointsCount = Math.ceil(canvas.width / config.pointSpacing) + 1;
+                
+                for (let i = 0; i < pointsCount; i++) {
+                    waveData.push(getRandomValue());
+                }
+            }
+            
+            // 生成0-100的随机数
+            function getRandomValue() {
+                return Math.random() * config.maxValue;
+            }
+            
+            // 添加新的点并移除旧的点（右侧添加，左侧移除）
+            function updateWaveData() {
+                const newValue = getRandomValue();
+                waveData.unshift(newValue); // 在数组开头添加新点（右侧）
+                waveData.pop(); // 移除数组末尾的点（左侧）
+                
+                // 更新最新值显示
+                $('#latestValue').text(newValue.toFixed(1));
+            }
+            
+            // 绘制背景网格
+            function drawGrid() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.strokeStyle = config.gridColor;
+                ctx.lineWidth = 1;
+                
+                // 绘制垂直线
+                for (let x = 0; x <= canvas.width; x += config.pointSpacing) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
+                
+                // 绘制水平线
+                for (let y = 0; y <= canvas.height; y += config.pointSpacing) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+            }
+            
+            // 绘制波形（现在从底部向上绘制，范围0-100）
+            function drawWave() {
+                // 绘制背景网格
+                drawGrid();
+                
+                // 绘制填充区域
+                ctx.beginPath();
+                // 从右下角开始
+                ctx.moveTo(canvas.width, canvas.height);
+                // 绘制到第一个数据点
+                ctx.lineTo(canvas.width, canvas.height - (waveData[0] / config.maxValue) * canvas.height);
+                
+                // 绘制数据点连线
+                for (let i = 1; i < waveData.length; i++) {
+                    ctx.lineTo(
+                        canvas.width - i * config.pointSpacing, 
+                        canvas.height - (waveData[i] / config.maxValue) * canvas.height
+                    );
+                }
+                
+                // 连接到左下角
+                ctx.lineTo(0, canvas.height);
+                // 闭合路径
+                ctx.closePath();
+                
+                // 填充区域
+                ctx.fillStyle = config.fillColor;
+                ctx.fill();
+                
+                // 绘制波形线
+                ctx.beginPath();
+                ctx.moveTo(canvas.width, canvas.height - (waveData[0] / config.maxValue) * canvas.height);
+                
+                for (let i = 1; i < waveData.length; i++) {
+                    ctx.lineTo(
+                        canvas.width - i * config.pointSpacing, 
+                        canvas.height - (waveData[i] / config.maxValue) * canvas.height
+                    );
+                }
+                
+                // 设置线条样式
+                ctx.strokeStyle = config.lineColor;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            
+            // 平滑动画循环
+            let lastUpdateTime = 0;
+            function animate(timestamp) {
+                if (isRunning) {
+                    if (!lastUpdateTime || timestamp - lastUpdateTime >= config.updateInterval) {
+                        updateWaveData();
+                        drawWave();
+                        lastUpdateTime = timestamp;
+                    }
+                    animationId = requestAnimationFrame(animate);
+                }
+            }
+            
+            // 切换播放/暂停
+            $('#toggleBtn').on('click', function() {
+                isRunning = !isRunning;
+                
+                if (isRunning) {
+                    lastUpdateTime = 0;
+                    animate();
+                    $(this).addClass('bg-red-500 hover:bg-red-600').removeClass('bg-primary hover:bg-primary/90');
+                    $('#btnText').text('暂停');
+                    $(this).find('i').removeClass('fa-play').addClass('fa-pause');
+                } else {
+                    if (animationId) {
+                        cancelAnimationFrame(animationId);
+                    }
+                    $(this).addClass('bg-primary hover:bg-primary/90').removeClass('bg-red-500 hover:bg-red-600');
+                    $('#btnText').text('开始');
+                    $(this).find('i').removeClass('fa-pause').addClass('fa-play');
+                }
+            });
+            
+            // 初始化
+            initWaveData();
+            drawWave();
+        });
+    </script>
+</body>
+</html>
+    
