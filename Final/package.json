@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "electron": "^37.2.4"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }

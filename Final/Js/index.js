@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const ESPDeviceOrigin = document.getElementById("espOrigin");
 ESPDeviceOrigin.style = "display: none";
 const plusButton = document.getElementById("plusB");
+const mainButton = document.getElementById("mainButton");
+const thirdButton = document.getElementById("thirdButton");
 
 
 
@@ -50,8 +52,14 @@ window.electronAPI.onDeviceList((devices) => {
     refreshDevice2Win(espDeviceElementList);
 
     plusButton.onclick = function(){
-    window.electronAPI.sendToDevice(devices[0]["id"], "LED_ON\n");
-}
+        window.electronAPI.sendToDevice(devices[0]["id"], "LED_ON\n");
+    }
+    mainButton.onclick = function(){
+        window.electronAPI.sendToDevice(devices[1]["id"], "LED_ON\n")
+    }
+    thirdButton.onclick = function(){
+        window.electronAPI.sendToDevice(devices[2]["id"], "LED_ON\n")
+    }
 });
 
 

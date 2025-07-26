@@ -23,7 +23,7 @@
                         dark: '#1E293B',
                         darkBg: '#0F172A',
                         darkCard: '#000000',
-                        darkBorder: '#1f1f1f',
+                        darkBorder: '#000000',
                         darkGrid: '#334155',
                     },
                     fontFamily: {
@@ -85,7 +85,7 @@
                 </div>
                 
                 <div class="mt-6 flex justify-center">
-                    <button id="toggleAllBtn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm transition-all flex items-center" style="display: none;">
+                    <button id="toggleAllBtn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm transition-all flex items-center">
                         <i class="fa fa-play mr-2"></i> <span>全部开始</span>
                     </button>
                 </div>
@@ -108,7 +108,7 @@
                 </div>
             </div>
             <!-- 居中显示启动调频按钮 -->
-            <button class="btn-groove">确认操作</button>
+            <button  id="mainButton" class="btn-groove">确认操作</button>
         </div>
 
         <!-- 右侧模块：1/5 宽 -->
@@ -133,7 +133,7 @@
 
             <img src="./img/DrPussy.png">
 
-            <button class="w-full p-[12px] text-[12px] rounded-[6px] flex justify-center items-center bg-[rgba(20,19,22,1)] text-[rgba(169,165,179,1)]">
+            <button id="thirdButton" class="w-full p-[12px] text-[12px] rounded-[6px] flex justify-center items-center bg-[rgba(20,19,22,1)] text-[rgba(169,165,179,1)]">
                 <i class="fas fa-sync-alt mr-[6px]"></i> 重新校准
             </button>
         </div>

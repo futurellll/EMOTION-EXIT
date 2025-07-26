@@ -1,8 +1,8 @@
-// 全局配置参数
+        // 全局配置参数
         const config = {
             canvasWidth: 220,
             canvasHeight: 135,
-            updateInterval: 150, // 更新间隔(ms)
+            updateInterval: 1000, // 更新间隔(ms)
             maxValue: 100, // 最大值
             pointSpacing: 10, // 点间距和网格大小
             gridColor: '#334155', // 暗色主题网格颜色
@@ -12,29 +12,41 @@
             verticalGap: 20, // 垂直间距(px)
             // 每个波形图的配置
             waveforms: [
-                { id: 0, title: "波形图1", lineColor: '#3B82F6', fillColor: 'rgba(59, 130, 246, 0.3)' },
-                { id: 1, title: "波形图2", lineColor: '#10B981', fillColor: 'rgba(16, 185, 129, 0.3)' },
-                { id: 2, title: "波形图3", lineColor: '#EF4444', fillColor: 'rgba(239, 68, 68, 0.3)' },
-                { id: 3, title: "波形图4", lineColor: '#8B5CF6', fillColor: 'rgba(139, 92, 246, 0.3)' },
-                { id: 4, title: "波形图5", lineColor: '#F59E0B', fillColor: 'rgba(245, 158, 11, 0.3)' },
-                { id: 5, title: "波形图6", lineColor: '#EC4899', fillColor: 'rgba(236, 72, 153, 0.3)' }
+                { id: 0, title: "波形图1", lineColor: '#3B82F6', fillColor: 'rgba(59, 130, 246, 0.3)', dataSource: 'data1' },
+                { id: 1, title: "波形图2", lineColor: '#10B981', fillColor: 'rgba(16, 185, 129, 0.3)', dataSource: 'data2' },
+                { id: 2, title: "波形图3", lineColor: '#EF4444', fillColor: 'rgba(239, 68, 68, 0.3)', dataSource: 'data3' },
+                { id: 3, title: "波形图4", lineColor: '#8B5CF6', fillColor: 'rgba(139, 92, 246, 0.3)', dataSource: 'data4' },
+                { id: 4, title: "波形图5", lineColor: '#F59E0B', fillColor: 'rgba(245, 158, 11, 0.3)', dataSource: 'data5' },
+                { id: 5, title: "波形图6", lineColor: '#EC4899', fillColor: 'rgba(236, 72, 153, 0.3)', dataSource: 'data6' }
             ]
         };
 
         // 存储所有波形图实例
         const waveInstances = [];
+        
+        // 外部数据存储
+        const externalData = {
+            data1: null,
+            data2: null,
+            data3: null,
+            data4: null,
+            data5: null,
+            data6: null
+        };
 
         // 波形图类
         class Waveform {
-            constructor(id, title, lineColor, fillColor) {
+            constructor(id, title, lineColor, fillColor, dataSource) {
                 this.id = id;
                 this.title = title;
                 this.lineColor = lineColor;
                 this.fillColor = fillColor;
+                this.dataSource = dataSource; // 数据来源标识
                 this.waveData = [];
                 this.isRunning = false;
                 this.animationId = null;
                 this.lastUpdateTime = 0;
+                this.useExternalData = false; // 是否使用外部数据
                 
                 this.init();
             }
@@ -82,8 +94,32 @@
                 }
             }
             
-            // 生成随机值（不同波形图可以有不同的数据生成逻辑）
+            // 使用外部数据更新波形
+            updateWithExternalData(value) {
+                // 确保数值在有效范围内
+                const clampedValue = Math.max(0, Math.min(value, config.maxValue));
+                this.waveData.unshift(clampedValue);
+                this.waveData.pop();
+                
+                // 更新最新值显示
+                this.valueDisplay.textContent = clampedValue.toFixed(1);
+                
+                // 标记使用外部数据
+                this.useExternalData = true;
+                
+                // 如果未运行，则更新一次波形
+                if (!this.isRunning) {
+                    this.drawWave();
+                }
+            }
+            
+            // 生成随机值（仅在没有外部数据时使用）
             getRandomValue() {
+                // 如果有外部数据，则使用外部数据
+                if (this.useExternalData && externalData[this.dataSource] !== null) {
+                    return externalData[this.dataSource];
+                }
+                
                 // 为不同波形图设置不同的数据分布特性
                 if (this.id === 0) return Math.random() * config.maxValue; // 随机
                 if (this.id === 1) return 50 + Math.sin(Date.now() / 1000) * 30; // 正弦波
@@ -200,7 +236,8 @@
                     waveConfig.id, 
                     waveConfig.title, 
                     waveConfig.lineColor, 
-                    waveConfig.fillColor
+                    waveConfig.fillColor,
+                    waveConfig.dataSource
                 );
                 waveInstances.push(wave);
             });
@@ -232,6 +269,30 @@
                 toggleBtn.classList.add('bg-primary', 'hover:bg-primary/90');
                 toggleBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
             }
+        }
+        
+        // 从外部更新所有波形图数据的函数
+        function updateAllWaveformsWithExternalData(dataArray) {
+            if (!Array.isArray(dataArray) || dataArray.length !== 6) {
+                console.error('需要提供包含6个数据的数组');
+                return;
+            }
+            
+            // 更新外部数据存储
+            externalData.data1 = dataArray[0];
+            externalData.data2 = dataArray[1];
+            externalData.data3 = dataArray[2];
+            externalData.data4 = dataArray[3];
+            externalData.data5 = dataArray[4];
+            externalData.data6 = dataArray[5];
+            
+            // 更新每个波形图
+            waveInstances.forEach(wave => {
+                const value = externalData[wave.dataSource];
+                if (value !== null) {
+                    wave.updateWithExternalData(value);
+                }
+            });
         }
 
         // 页面加载完成后初始化

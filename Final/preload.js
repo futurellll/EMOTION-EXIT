@@ -8,8 +8,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onDeviceStatus: (callback) => ipcRenderer.on('device-status', (_, status) => callback(status)),
   onDeviceMessage: (callback) => ipcRenderer.on('device-message', (_, message) => callback(message)),
   onSendStatus: (callback) => ipcRenderer.on('send-status', (_, status) => callback(status)),
+  getEmotionBciWave: (callback) => ipcRenderer.on('emotion-bci-sent', (_, data) => callback(data)),
   
   // 发送消息
   sendToDevice: (deviceId, message) => ipcRenderer.send('send-to-device', { deviceId, message }),
-  broadcast: (message) => ipcRenderer.send('broadcast', message)
+  broadcast: (message) => ipcRenderer.send('broadcast', message),
+  wantEmotionBciWave: () => ipcRenderer.send('want-emotion-bci')
 });
