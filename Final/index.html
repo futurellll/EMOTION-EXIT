@@ -50,9 +50,10 @@
         <div id="left-sidebar" class="flex flex-col w-1/5 bg-[rgba(44,42,49,1)] p-[18px] rounded-[8px] ml-[45px] mr-[24px]">
             <div class="flex justify-between items-center mb-[18px]">
                 <h2 class="text-[14px] font-medium">ESP32设备管理</h2>
-                <button id="plusB" class="flex justify-center items-center w-[32px] h-[32px] rounded-[6px] bg-[rgba(164,147,255,1)] text-[rgba(26,24,29,1)]">
+                <button id="plusB" class="flex justify-center items-center w-[32px] h-[32px] rounded-[6px] bg-[rgba(164,147,255,1)] text-[rgba(26,24,29,1)]" style="display: none;">
                     <i class="fas fa-plus"></i>
                 </button>
+                <img src="./img/seal2.png">
             </div>
 
             <div id="espOrigin" class="device-item device-item-connected flex items-center mb-[12px] p-[12px] rounded-[6px] w-[250px]" style="display: none">
@@ -77,7 +78,7 @@
         <div id="main-content" class="flex flex-col w-2/4 bg-[rgba(44,42,49,1)] p-[24px] rounded-[8px] overflow-auto">
 
 
-            <h1 class="mb-[24px] text-[20px] font-medium">情绪监测与调频中心</h1>
+            <h1 class="mb-[24px] text-[20px] font-medium">数据显示</h1>
 
             <div class="w-full max-w-4xl">
                 <div id="waveContainer" class="grid grid-cols-3 gap-[20px]">

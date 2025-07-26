@@ -41,7 +41,7 @@ window.electronAPI.onDeviceList((devices) => {
     //console.log(devices[0]);
     for(let i = 0; i < devices.length; i++){
         //espDeviceList[i] = devices[i];
-        console.log(devices[i]["name"]);
+        //console.log(devices[i]["name"]);
         let aNewEle = ESPDeviceOrigin.cloneNode(true);
         aNewEle.style = "display: block";
         aNewEle.id = "espDevice_" + i;

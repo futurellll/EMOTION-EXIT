@@ -36,16 +36,45 @@ const externalData = {
 
 const backendUrl = "http://192.168.137.206:8000";
 
-let allDevices
-window.electronAPI.onDeviceList((devices) => {
-    allDevices = devices;
+let allDevices = [null, null, null];
+window.waveAPI.onDeviceList((devices) => {
+    allDevices = [null, null, null];
+    // devices.forEach(function() {
+    //     console.log("name:" + this["name"]);
+    //     switch(this["name"]){
+    //         case "ESP32-1":
+    //             allDevices[0] = this;
+    //             break;
+    //         case "ESP32-2":
+    //             allDevices[1] = this;
+    //             break;
+    //         case "ESP32-3":
+    //             allDevices[2] = this;
+    //             break;
+    //     }
+    // });
+    for(let i = 0; i < 3; i++){
+        if(devices[i]){
+            switch(devices[i]["name"]){
+                case "ESP32-1":
+                    allDevices[0] = devices[i];
+                    break;
+                case "ESP32-2":
+                    allDevices[1] = devices[i];
+                    break;
+                case "ESP32-3":
+                    allDevices[2] = devices[i];
+                    break;
+            }
+        }
+    }
 });
 
 let datas = [];
 async function fetchBciData() {
 
   try {
-    console.log('发起请求:', backendUrl + '/emotion/bci');
+    //console.log('发起请求:', backendUrl + '/emotion/bci');
     
     // 调用预加载脚本暴露的 fetch
     const result = await window.electronAPI.fetch(
@@ -67,7 +96,7 @@ async function fetchBciData() {
     }
     
     // 成功获取数据
-    console.log('响应数据:', result.body);
+    //console.log('响应数据:', result.body);
     // 在这里处理数据（例如更新波形图）
     // updateAllWaveformsWithExternalData(/* 从 result.body 提取的数据 */);
     const dataArray = [result.body["Attention"] * 100, 
@@ -123,7 +152,7 @@ async function fetchIntensityData(){
     }
     $("#intensityInnerBar").animate({
         width: intensityData + "%",
-    }, 1000);
+    }, 850);
     document.getElementById("intensityNum").innerHTML = intensityData + "%";
 
     } catch (error) {
@@ -197,8 +226,30 @@ async function fetchCvData(){
 }
 
 function sendCmd2Esp(data){
-    console.log(data);
-    window.electronAPI.sendToDevice(allDevices[0]["id"], allDevices[0] + ":" + data[1] + ":" + "\n");
+    //console.log("waiting for sending:" + data[1]);
+    console.log(allDevices);
+    let buffer1 = [null, null];
+    let buffer2 = [null, null];
+    let buffer3 = [null, null];
+
+    buffer1[0] = data[1];        //修改这里以调整发送的数据
+    buffer1[1] = data[1];
+
+    buffer2[0] = data[1];        //修改这里以调整发送的数据
+    buffer2[1] = data[1];
+
+    buffer3[0] = data[1];        //修改这里以调整发送的数据
+    buffer3[1] = data[1];
+
+    if(allDevices[0] != null){
+        window.electronAPI.sendToDevice(allDevices[0]["id"], buffer1[0] + "|" + buffer1[1] + "\n");
+    }
+    if(allDevices[1] != null){
+        window.electronAPI.sendToDevice(allDevices[1]["id"], buffer2[0] + "|" + buffer2[1] + "\n");
+    }
+    if(allDevices[2] != null){
+        window.electronAPI.sendToDevice(allDevices[2]["id"], buffer3[0] + "|" + buffer3[1] + "\n");
+    }
 }
 
 function resetAllWaveforms() {
@@ -475,6 +526,12 @@ function toggleAllWaveforms() {
         resetAllWaveforms();             //所有数据显示复位
         resetIntensityBar();
         resetCvBlock();
+
+        for(let i = 0; i < 3; i++){
+            if(allDevices[i] != null){
+                 window.electronAPI.sendToDevice(allDevices[i]["id"], "0|0\n");
+            }
+        }
 
         // toggleBtn.querySelector('span').textContent = '全部暂停';
         // toggleBtn.querySelector('i').className = 'fa fa-pause mr-2';

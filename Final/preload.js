@@ -30,3 +30,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   }
 
 });
+
+contextBridge.exposeInMainWorld('waveAPI', {
+  onDeviceList: (callback) => ipcRenderer.on('device-list', (_, devices) => callback(devices)),
+});
+
