@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @layer theme, base, paraflow, components, utilities;
+    </style>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://static.paraflowcontent.com/public/css/font-awesome/font-awesome.672.css">
+    <script src="https://static.paraflowcontent.com/public/js/tailwind/tailwind.js"></script>
+    <link rel="stylesheet" href="./index.css">
+    <script src="https://static.paraflowcontent.com/public/js/tailwind/tailwind.js"></script>
+    <script src="./Js/jQuery.js"></script>
+</head>
+<body id="body" orderindex="84" class="font-[-apple-system,BlinkMacSystemFont,'Segoe UI'] w-[1440px] min-h-[960px]" style="background-color: rgba(26, 24, 29, 1); line-height: 1.4; color: rgba(245, 244, 247, 1);" title="EmotionTune主界面" worldtransform="1480.0, 0.0">
+    
+    <div id="7-1" orderindex="80" class="flex w-full min-h-[960px] pt-[24px] pr-[24px] pb-[24px] pl-[24px]">
+        
+        <!-- Left Sidebar - ESP32 Device Management -->
+        <div id="7-2" orderindex="80" style="background-color: rgba(44, 42, 49, 1);" class="flex flex-col shrink-0 w-[300px] mr-[24px] pt-[18px] pr-[18px] pb-[18px] pl-[18px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+            
+            <div id="7-3" orderindex="80" class="flex justify-between items-center mb-[18px]">
+                <h2 id="7-4" orderindex="80" class="text-[14px] font-medium">ESP32设备管理</h2>
+                <button id="plusB" orderindex="81" style="background-color: rgba(164, 147, 255, 1); color: rgba(26, 24, 29, 1);" class="flex justify-center items-center w-[32px] h-[32px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px]">
+                    <i id="7-6" orderindex="80" class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <div id="espOrigin" orderindex="80" class="device-item device-item-connected flex items-center mb-[12px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px]">
+                <div orderindex="80" style="background-color: rgba(140, 227, 196, 1);" class="w-[8px] h-[8px] mr-[12px] rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-full"></div>
+                <div orderindex="81" style="flex-basis: 0%;" class="grow shrink">
+                    <div orderindex="80" class="text-[12px] font-medium deviceName">设备  1</div>
+                    <div orderindex="81" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">已连接</div>
+                </div>
+            </div>
+            <div id="a77" orderindex="81">
+                <!-- Device List -->
+
+            </div>
+            
+            <img src="./img/seal1.png">
+        </div>
+        
+        <!-- Main Content - Emotion Monitoring Center -->
+        <div id="MidBlock" orderindex="81" style="background-color: rgba(44, 42, 49, 1); flex-basis: 0%;" class="flex flex-col grow shrink items-center pt-[24px] pr-[24px] pb-[24px] pl-[24px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+            
+            <h1 id="7:34" orderindex="80" class="mb-[24px] text-[20px] font-medium">情绪监测与调频中心</h1>
+            
+            <!-- Brain Wave Activity Visualization -->
+            <div id="7:35" orderindex="81" style="background-color: rgba(20, 19, 22, 1);" class="overflow-x-hidden overflow-y-hidden relative w-full h-[180px] mb-[24px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+                <div id="7:36" orderindex="80" class="flex justify-between items-end h-full">
+                    <!-- Wave animation bars -->
+                    <div id="7:37" orderindex="80" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 60%;"></div>
+                    <div id="7:38" orderindex="81" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 80%;"></div>
+                    <div id="7:39" orderindex="82" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 40%;"></div>
+                    <div id="7:40" orderindex="83" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 70%;"></div>
+                    <div id="7:41" orderindex="84" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 90%;"></div>
+                    <div id="7:42" orderindex="85" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 50%;"></div>
+                    <div id="7:43" orderindex="86" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 65%;"></div>
+                    <div id="7:44" orderindex="87" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 85%;"></div>
+                    <div id="7:45" orderindex="88" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 45%;"></div>
+                    <div id="7:46" orderindex="89" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 75%;"></div>
+                    <div id="7:47" orderindex="8a" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 55%;"></div>
+                    <div id="7:48" orderindex="8b" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 70%;"></div>
+                    <div id="7:49" orderindex="8c" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 40%;"></div>
+                    <div id="7:50" orderindex="8d" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 60%;"></div>
+                    <div id="7:51" orderindex="8e" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 80%;"></div>
+                    <div id="7:52" orderindex="8f" class="wave-animation w-[6px]" style="background-color: rgba(164, 147, 255, 1); height: 50%;"></div>
+                </div>
+                <div id="7:53" orderindex="81" style="color: rgba(169, 165, 179, 1);" class="absolute top-[12px] left-[12px] text-[10px]">脑波活动</div>
+            </div>
+            
+            <!-- Emotion Status Panels -->
+            <div id="7:54" orderindex="82" class="flex gap-y-[24px] gap-x-[24px] w-full mb-[36px]">
+                <!-- Current Emotion Type -->
+                <div id="7:55" orderindex="80" style="background-color: rgba(20, 19, 22, 1); flex-basis: 0%;" class="flex flex-col grow shrink justify-center items-center pt-[18px] pr-[18px] pb-[18px] pl-[18px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+                    <div id="7:56" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="mb-[12px] text-[12px]">当前情绪类型</div>
+                    <div id="7:57" orderindex="81" class="emotion-tag pt-[6px] pr-[18px] pb-[6px] pl-[18px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px] text-[14px] font-medium">专注</div>
+                </div>
+                
+                <!-- Emotion Intensity -->
+                <div id="7:58" orderindex="81" style="background-color: rgba(20, 19, 22, 1); flex-basis: 0%;" class="flex flex-col grow shrink pt-[18px] pr-[18px] pb-[18px] pl-[18px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+                    <div id="7:59" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="mb-[12px] text-[12px]">情绪强度</div>
+                    <div id="7:60" orderindex="81" class="flex items-center">
+                        <div id="7:61" orderindex="80" style="background-color: rgba(77, 73, 87, 1); flex-basis: 0%;" class="overflow-x-hidden overflow-y-hidden grow shrink h-[6px] rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-full">
+                            <div id="7:62" orderindex="80" style="background-color: rgba(164, 147, 255, 1); width: 75%;" class="h-full rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-full"></div>
+                        </div>
+                        <div id="7:63" orderindex="81" class="ml-[12px] text-[14px] font-medium">75%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Start Tuning Button -->
+            <button id="7:64" orderindex="83" style="background-color: rgba(164, 147, 255, 1); color: rgba(26, 24, 29, 1);" class="w-[180px] h-[50px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px] text-[16px] font-medium">
+                启动调频
+            </button>
+            
+            <div id="7:65" orderindex="84" style="color: rgba(169, 165, 179, 1);" class="mt-[12px] text-[10px]">点击按钮开始情绪监测与调频</div>
+        </div>
+        
+        <!-- Right Sidebar - BCI Device Status -->
+        <div id="7:66" orderindex="82" style="background-color: rgba(44, 42, 49, 1);" class="flex flex-col shrink-0 w-[300px] ml-[24px] pt-[18px] pr-[18px] pb-[18px] pl-[18px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+            
+            <div id="7:67" orderindex="80" class="flex items-center mb-[24px]">
+                <h2 id="7:68" orderindex="80" style="flex-basis: 0%;" class="grow shrink text-[14px] font-medium">脑机接口设备状态</h2>
+                <div id="7:69" orderindex="81" style="background-color: rgba(140, 227, 196, 1);" class="w-[10px] h-[10px] rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-full"></div>
+            </div>
+            
+            <!-- Device Info Card -->
+            <div id="7:70" orderindex="81" style="background-color: rgba(20, 19, 22, 1);" class="mb-[18px] pt-[18px] pr-[18px] pb-[18px] pl-[18px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+                <div id="7:71" orderindex="80" class="flex justify-between items-center mb-[18px]">
+                    <div id="7:72" orderindex="80" class="flex items-center">
+                        <div id="7:73" orderindex="80" style="background-color: rgba(77, 73, 87, 1);" class="flex justify-center items-center w-[36px] h-[36px] mr-[12px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px]">
+                            <i id="7:74" orderindex="80" class="fas fa-brain" style="color: rgba(164, 147, 255, 1);"></i>
+                        </div>
+                        <div id="7:75" orderindex="81">
+                            <div id="7:76" orderindex="80" class="text-[12px] font-medium">NeuroSense Pro</div>
+                            <div id="7:77" orderindex="81" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">SN: NS-2023-92648</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Battery Status -->
+                <div id="7:78" orderindex="81" class="mb-[12px]">
+                    <div id="7:79" orderindex="80" class="flex justify-between items-center mb-[6px]">
+                        <div id="7:80" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">电池电量</div>
+                        <div id="7:81" orderindex="81" style="color: rgba(140, 227, 196, 1);" class="text-[10px]">82%</div>
+                    </div>
+                    <div id="7:82" orderindex="81" style="background-color: rgba(77, 73, 87, 1);" class="overflow-x-hidden overflow-y-hidden h-[4px] rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-full">
+                        <div id="7:83" orderindex="80" style="background-color: rgba(140, 227, 196, 1); width: 82%;" class="h-full rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-full"></div>
+                    </div>
+                </div>
+                
+                <!-- Signal Strength -->
+                <div id="7:84" orderindex="82" class="mb-[12px]">
+                    <div id="7:85" orderindex="80" class="flex justify-between items-center mb-[6px]">
+                        <div id="7:86" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">信号强度</div>
+                        <div id="7:87" orderindex="81" style="color: rgba(140, 227, 196, 1);" class="text-[10px]">优秀</div>
+                    </div>
+                    <div id="7:88" orderindex="81" class="flex gap-y-[3px] gap-x-[3px]">
+                        <div id="7:89" orderindex="80" style="background-color: rgba(140, 227, 196, 1);" class="w-[4px] h-[12px] rounded-tl-[1px] rounded-tr-[1px] rounded-br-[1px] rounded-bl-[1px]"></div>
+                        <div id="7:90" orderindex="81" style="background-color: rgba(140, 227, 196, 1);" class="w-[4px] h-[12px] rounded-tl-[1px] rounded-tr-[1px] rounded-br-[1px] rounded-bl-[1px]"></div>
+                        <div id="7:91" orderindex="82" style="background-color: rgba(140, 227, 196, 1);" class="w-[4px] h-[12px] rounded-tl-[1px] rounded-tr-[1px] rounded-br-[1px] rounded-bl-[1px]"></div>
+                        <div id="7:92" orderindex="83" style="background-color: rgba(140, 227, 196, 1);" class="w-[4px] h-[12px] rounded-tl-[1px] rounded-tr-[1px] rounded-br-[1px] rounded-bl-[1px]"></div>
+                        <div id="7:93" orderindex="84" style="background-color: rgba(140, 227, 196, 1);" class="w-[4px] h-[12px] rounded-tl-[1px] rounded-tr-[1px] rounded-br-[1px] rounded-bl-[1px]"></div>
+                    </div>
+                </div>
+                
+                <div id="7:94" orderindex="83" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">已连接时间: 02:34:17</div>
+            </div>
+            
+            <!-- Device Diagnostics -->
+            <div id="7:95" orderindex="82" style="background-color: rgba(20, 19, 22, 1);" class="mb-[18px] pt-[18px] pr-[18px] pb-[18px] pl-[18px] rounded-tl-[8px] rounded-tr-[8px] rounded-br-[8px] rounded-bl-[8px]">
+                <div id="7:96" orderindex="80" class="mb-[12px] text-[12px] font-medium">设备诊断</div>
+                
+                <div id="7:97" orderindex="81" class="flex justify-between items-center mb-[8px]">
+                    <div id="7:98" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">传感器状态</div>
+                    <div id="7:99" orderindex="81" style="color: rgba(140, 227, 196, 1);" class="text-[10px]">正常</div>
+                </div>
+                
+                <div id="7:100" orderindex="82" class="flex justify-between items-center mb-[8px]">
+                    <div id="7:101" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">固件版本</div>
+                    <div id="7:102" orderindex="81" class="text-[10px]">v2.3.7</div>
+                </div>
+                
+                <div id="7:103" orderindex="83" class="flex justify-between items-center mb-[8px]">
+                    <div id="7:104" orderindex="80" style="color: rgba(169, 165, 179, 1);" class="text-[10px]">最近校准</div>
+                    <div id="7:105" orderindex="81" class="text-[10px]">今天 09:15</div>
+                </div>
+            </div>
+            
+            <!-- Recalibrate Button -->
+            <div id="7:106" orderindex="83" style="margin-top: auto;">
+                <button id="7:107" orderindex="80" style="background-color: rgba(20, 19, 22, 1); color: rgba(169, 165, 179, 1);" class="flex justify-center items-center w-full pt-[12px] pb-[12px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px] text-[12px]">
+                    <i id="7:108" orderindex="80" class="fas fa-sync-alt mr-[6px]"></i>
+                    <span id="7:109" orderindex="81">重新校准</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./Js/index.js"></script>
+</html>
