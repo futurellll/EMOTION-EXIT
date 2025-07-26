@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const net = require('net');
 const path = require('path');
-const fetch = require('node-fetch');
 
 let mainWindow;
 let server;
@@ -27,42 +26,8 @@ function createWindow() {
   // 发送设备列表到前端
   sendDeviceList();
   console.log("$$window created");
-  fetchData();
 }
 
-
-
-const backEndURL = "http://30.201.209.147:8000/"
-
-async function fetchData() {
-    try {
-
-        const response = await fetch(
-            backEndURL + `emotion/bci`
-        );
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('响应数据:', data);
-        return data;
-    } catch (error) {
-        console.error('Fetch error:', error);
-    }
-}
-
-
-
-  // ipcMain.on('want-emotion-bci', async (event) => {
-  //   try {
-  //     const data = await fetchData();
-  //     mainWindow.webContents.send('emotion-bci-sent', data);
-  //   } catch (err) {
-  //     console.error('发送情绪数据失败:', err);
-  //   }
-  // });
 
 // 创建TCP服务器
 function createServer() {
@@ -237,7 +202,6 @@ ipcMain.on('broadcast', (event, message) => {
 app.whenReady().then(() => {
   createWindow();
   createServer();
-  fetchData();
   
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
