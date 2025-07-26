@@ -1,0 +1,9 @@
+opencv-python
+numpy
+deepface
+tqdm
+fastapi
+uvicorn
+openai
+requests
+pylsl
