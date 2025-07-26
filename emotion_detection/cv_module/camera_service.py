@@ -1,7 +1,7 @@
 # camera_service.py
 import time
 import cv2
-from emotion_client import EmotionClient
+from cv_module.emotion_client import EmotionClient
 
 def start_camera_loop(callback, interval_sec=5):
     cap = cv2.VideoCapture(0)

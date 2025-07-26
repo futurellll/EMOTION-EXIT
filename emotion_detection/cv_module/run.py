@@ -1,5 +1,5 @@
 # run.py
-from camera_service import start_camera_loop
+from cv_module.camera_service import start_camera_loop
 import time
 import threading
 
@@ -25,9 +25,9 @@ def get_emotion_type():
     with state_lock:
         return emotion_state["emotion"]
 
-if __name__ == "__main__":
+def start_cv_service():
 
     print("[启动] 摄像头情绪识别服务，每5秒采样一帧")
-    start_camera_loop(echo, interval_sec=1)
+    start_camera_loop(echo, interval_sec=3)
 
     
