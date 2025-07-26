@@ -37,6 +37,9 @@ const externalData = {
 const backendUrl = "http://192.168.137.206:8000";
 
 async function fetchData() {
+
+  let datas = [];
+
   try {
     console.log('发起请求:', backendUrl + '/emotion/bci');
     
@@ -70,7 +73,53 @@ async function fetchData() {
                         result.body["Relaxation"] * 100, 
                         result.body["Stress"] * 100
                     ];
+    if(dataArrey){
+        datas[0] = dataArrey;
+    }else{
+        datas[0] = null;
+    }
     updateAllWaveformsWithExternalData(dataArrey);
+  } catch (error) {
+    console.error('Fetch error:', error.message);
+    // 可在这里添加 UI 错误提示
+  }
+
+    try {
+    console.log('发起请求:', backendUrl + '/emotion/intensity');
+    
+    // 调用预加载脚本暴露的 fetch
+    const result = await window.electronAPI.fetch(
+      backendUrl + '/emotion/intensity',
+      { 
+        method: 'GET',
+        timeout: 5000 // 超时时间 5 秒
+      }
+    );
+    
+    // 检查是否有网络错误（如连接失败）
+    if (result.error) {
+      throw new Error(`网络请求失败: ${result.error}`);
+    }
+    
+    // 检查 HTTP 状态码（此时 result.status 一定存在）
+    if (!result.ok) {
+      throw new Error(`服务器错误: 状态码 ${result.status}`);
+    }
+    
+    // 成功获取数据
+    console.log('响应数据:', result.body["intensity"]);
+    const intensityData = Math.round(result.body["intensity"] * 100);
+
+    if(intensityData){
+        datas[1] = intensityData;
+    }else{
+        datas[1] = null;
+    }
+    $("#intensityInnerBar").animate({
+        width: intensityData + "%",
+    }, 1000);
+    document.getElementById("intensityNum").innerHTML = intensityData + "%";
+
   } catch (error) {
     console.error('Fetch error:', error.message);
     // 可在这里添加 UI 错误提示
@@ -99,6 +148,12 @@ function resetAllWaveforms() {
     });
 
     console.log('所有波形图已清零');
+}
+function resetIntensityBar() {
+    $("#intensityInnerBar").stop(true,true).animate({
+        width: "0%",
+    }, 1000);
+    document.getElementById("intensityNum").innerHTML = "0%";
 }
 
 // 波形图类
@@ -333,6 +388,7 @@ function toggleAllWaveforms() {
     if (!newState) {
         clearInterval(dataGetTimer);
         resetAllWaveforms();
+        resetIntensityBar();
         toggleBtn.querySelector('span').textContent = '全部暂停';
         toggleBtn.querySelector('i').className = 'fa fa-pause mr-2';
         toggleBtn.classList.add('bg-red-500', 'hover:bg-red-600');
@@ -342,7 +398,9 @@ function toggleAllWaveforms() {
 
     } else {
         dataGetTimer = setInterval(function(){
-        updateAllWaveformsWithExternalData(fetchData());
+        fetchData();
+
+
         }, config.updateInterval);
         toggleBtn.querySelector('span').textContent = '全部开始';
         toggleBtn.querySelector('i').className = 'fa fa-play mr-2';
@@ -378,3 +436,43 @@ function updateAllWaveformsWithExternalData(dataArray) {
 
 // 页面加载完成后初始化
 $(document).ready(initAllWaveforms);
+
+
+
+// async function fetchIntensityData() {
+//   try {
+//     console.log('发起请求:', backendUrl + '/emotion/intensity');
+    
+//     // 调用预加载脚本暴露的 fetch
+//     const result = await window.electronAPI.fetch(
+//       backendUrl + '/emotion/intensity',
+//       { 
+//         method: 'GET',
+//         timeout: 5000 // 超时时间 5 秒
+//       }
+//     );
+    
+//     // 检查是否有网络错误（如连接失败）
+//     if (result.error) {
+//       throw new Error(`网络请求失败: ${result.error}`);
+//     }
+    
+//     // 检查 HTTP 状态码（此时 result.status 一定存在）
+//     if (!result.ok) {
+//       throw new Error(`服务器错误: 状态码 ${result.status}`);
+//     }
+    
+//     // 成功获取数据
+//     console.log('响应数据:', result.body["intensity"]);
+    
+//     // 在这里处理数据（例如更新波形图）
+//     // updateAllWaveformsWithExternalData(/* 从 result.body 提取的数据 */);
+//   } catch (error) {
+//     console.error('Fetch error:', error.message);
+//     // 可在这里添加 UI 错误提示
+//   }
+
+//   console.log(result.body["intensity"]);
+//   return result.body["intensity"] * 100;
+
+// }
