@@ -130,7 +130,7 @@ class Waveform {
                     <span class="latest-value text-xs bg-darkCard px-1.5 py-0.5 rounded text-gray-200 border border-darkBorder">0.0</span>
                 </div>
             </div>
-            <div class="relative w-[220px] h-[135px] bg-darkCard rounded-lg shadow-md overflow-hidden border-2 border-darkBorder">
+            <div class="relative w-[220px] h-[135px] bg-darkCard rounded-lg shadow-md overflow-hidden border-2 border-darkBorder ml-[12px]">
                 <canvas class="wave-canvas absolute inset-0"></canvas>
             </div>
         `;
