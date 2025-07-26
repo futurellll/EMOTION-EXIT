@@ -1,0 +1,4 @@
+#minimax
+使用minimax agent参与编写项目后端算法部分
+使用minimax生成mp3文件做引导
+使用minimax生成宣传海报
