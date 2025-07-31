@@ -1,9 +1,11 @@
-#define DEVICE_SELECTOR 2
+#define DEVICE_SELECTOR 1
 
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <string>
 #include <sstream>
+
+
 
 // WiFi配置
 const char* ssid = "MAGICAL-JEJBD-con";  
@@ -12,6 +14,8 @@ const char* password = "13681644";
 // 服务器配置
 const char* host = "192.168.137.1";
 const int port = 7777;
+
+
 
 #if DEVICE_SELECTOR == 1
 // 设备信息（唯一标识关键）
@@ -58,18 +62,6 @@ String macAddress;  // 存储MAC地址（作为唯一标识）
 
 // 硬件配置
 const int LED_PIN = 22;  // 板载LED引脚
-const int BREATH_LED_PIN = 23;  // 呼吸灯引脚
-
-// 呼吸灯控制变量
-unsigned long breathLastUpdate = 0;
-float breathPhase = 0.0;  // 使用相位控制，0.0到2π
-float currentFrequency = 1.0;  // 当前频率（Hz），默认1Hz
-const float MIN_FREQ = 0.1;    // 最小频率0.3Hz
-const float MAX_FREQ = 1.0;    // 最大频率2Hz
-const int MIN_BRIGHTNESS = 0;
-const int MAX_BRIGHTNESS = 1023;
-const int BASE_UPDATE_STEPS = 100;  // 基础更新步数，确保平滑度
-float phaseIncrement = 0.0;         // 相位增量，动态计算
 
 // 网络客户端
 WiFiClient client;
@@ -77,57 +69,6 @@ WiFiClient client;
 // 连接状态变量
 unsigned long lastReconnectAttempt = 0;  // 重连计时器
 const unsigned long RECONNECT_DELAY = 5000;  // 重连间隔（5秒）
-
-// 调整呼吸灯频率（参数0-100映射到0.3-2Hz）
-void setBreathFrequency(int percent) {
-  // 限制输入参数范围
-  if (percent < 0) percent = 0;
-  if (percent > 100) percent = 100;
-  
-  // 将0-100映射到0.3-2Hz，使用指数映射增强低百分比时的频率差异
-  float normalized = percent / 100.0;
-  // 指数映射让低数值时有更明显的变化
-  currentFrequency = MIN_FREQ + (MAX_FREQ - MIN_FREQ) * (1 - exp(-3 * normalized));
-  
-  // 计算相位增量，确保每个频率下都有足够的更新步数
-  phaseIncrement = (2 * PI * currentFrequency) / (1000.0 / 10);  // 每10ms的相位增量
-}
-
-// 更新呼吸灯状态（非阻塞）
-void updateBreathLED() {
-  if (currentFrequency <= 0) {
-    analogWrite(BREATH_LED_PIN, 0);  // 频率为0时关闭
-    return;
-  }
-
-  // 固定10ms更新间隔，确保足够的平滑度
-  const unsigned long updateInterval = 10;
-  
-  unsigned long now = millis();
-  if (now - breathLastUpdate >= updateInterval) {
-    breathLastUpdate = now;
-    
-    // 更新相位（0到2π循环）
-    breathPhase += phaseIncrement;
-    if (breathPhase >= 2 * PI) {
-      breathPhase -= 2 * PI;
-    }
-    
-    // 使用改进的平滑呼吸曲线：正弦曲线的平方，使变化更自然
-    // 曲线在中间区域变化更平缓，两端变化稍快，减少视觉闪烁
-    float brightnessFactor = sin(breathPhase - PI/2) + 1;  // 范围0到2
-    brightnessFactor = brightnessFactor * brightnessFactor / 4;  // 平方后归一化到0到1
-    
-    int brightness = brightnessFactor * MAX_BRIGHTNESS;
-    
-    // 限制亮度范围（安全措施）
-    if (brightness < MIN_BRIGHTNESS) brightness = MIN_BRIGHTNESS;
-    if (brightness > MAX_BRIGHTNESS) brightness = MAX_BRIGHTNESS;
-    
-    // 设置PWM输出
-    analogWrite(BREATH_LED_PIN, brightness);
-  }
-}
 
 // 连接WiFi函数（带重试机制）
 void connectToWiFi() {
@@ -221,54 +162,52 @@ void handleServerCommands() {
       String status = digitalRead(LED_PIN) ? "ON" : "OFF";
       client.println("DATA:LED=" + status);
       Serial.println("已发送状态: " + status);
-    }
-    // 呼吸灯频率控制命令
-    else if (command.startsWith("BREATH_FREQ:")) {
-      int percent = command.substring(11).toInt();
-      setBreathFrequency(percent);
-      client.println("STATUS:BREATH_FREQ=" + String(currentFrequency, 2) + "Hz");
-      Serial.print("呼吸灯频率已设置为: ");
-      Serial.print(currentFrequency, 2);
-      Serial.println("Hz");
-    }
-    else {
-      // 其他命令处理
+    }else {
+      // 其他命令回复
       String input = command;
       int numbers[2];
       int colonIndex = input.indexOf('|');
-      
+  
       if (colonIndex != -1) {
-        // 提取冒号前的数字
-        String part1 = input.substring(0, colonIndex);
-        numbers[0] = part1.toInt();
-        
-        // 提取冒号后的数字
-        String part2 = input.substring(colonIndex + 1);
-        numbers[1] = part2.toInt();
+    // 提取冒号前的数字
+      String part1 = input.substring(0, colonIndex);
+      numbers[0] = part1.toInt();
+    
+    // 提取冒号后的数字
+      String part2 = input.substring(colonIndex + 1);
+      numbers[1] = part2.toInt();
 
-        int pwm1 = 1023 - (rppBt_1 + rpp_1_width * numbers[0] / 100) * 1023 / 100; 
-        int pwm2 = 1023 - (rppBt_2 + rpp_2_width * numbers[1] / 100) * 1023 / 100; 
+      // Serial.print("Number 0: ");
+      // Serial.println(numbers[0]);
+      // Serial.print("Number 1: ");
+      // Serial.println(numbers[1]);
 
-        Serial.println(pwm1);
-        Serial.println(pwm2);
+      int pwm1 = 1023 - (rppBt_1 + rpp_1_width * numbers[0] / 100) * 1023 / 100; 
+      int pwm2 = 1023 - (rppBt_2 + rpp_2_width * numbers[1] / 100) * 1023 / 100; 
 
-        analogWrite(12, 1023);
-        analogWrite(14, pwm1);
+      Serial.println(pwm1);
+      Serial.println(pwm2);
 
-        analogWrite(26, 1023);
-        analogWrite(27, 0);
-        
-        client.println("STATUS:EXTERNAL_COMMAND");
-        Serial.println("收到其他命令");
-      }
+      analogWrite(12, 1023);
+      analogWrite(14, pwm1);
+
+      analogWrite(26, 1023);
+      analogWrite(27, 0);
+
+
+      
+      client.println("STATUS:EXTERNAL_COMMAND");
+      Serial.println("收到其他命令");
     }
   }
+}
 }
 
 // 发送心跳包（主动维持连接）
 void sendHeartbeat() {
   if (client.connected()) {
     client.println("HEARTBEAT:ALIVE");
+    // Serial.println("已发送心跳包");  // 调试用，正常可注释
   }
 }
 
@@ -276,38 +215,28 @@ void setup() {
   // 初始化硬件
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
-  pinMode(BREATH_LED_PIN, OUTPUT);  // 初始化呼吸灯引脚
   pinMode(26, OUTPUT);
   pinMode(27, OUTPUT);
   pinMode(12, OUTPUT);
   pinMode(14, OUTPUT);
 
-  analogWriteResolution(10);  // 设置PWM分辨率为10位（0-1023）
-  //analogWriteFreq(5000);      // 设置PWM频率为5kHz，减少可能的闪烁
+  analogWriteResolution(10);
 
   digitalWrite(LED_PIN, HIGH);  // 初始关闭LED
-  analogWrite(BREATH_LED_PIN, 0);  // 初始关闭呼吸灯
 
   // 获取MAC地址（唯一标识核心）
   macAddress = WiFi.macAddress();
   Serial.print("设备MAC地址: ");
   Serial.println(macAddress);
 
-  // 初始化呼吸频率
-  setBreathFrequency(50);  // 默认50%对应约1Hz
-
   // 连接WiFi
   connectToWiFi();
 
   // 初始连接服务器
   connectToServer();
-
-  setBreathFrequency(1);
 }
 
 void loop() {
-  // 更新呼吸灯状态（非阻塞）
-  updateBreathLED();
   
   // 维护WiFi连接
   if (WiFi.status() != WL_CONNECTED) {
@@ -329,7 +258,7 @@ void loop() {
         lastReconnectAttempt = 0;  // 重置计时器
       }
     }
-    delay(10);
+    delay(100);
     return;
   }
 
@@ -343,5 +272,8 @@ void loop() {
     lastHeartbeat = millis();
   }
 
-  delay(1);  // 微小延迟，降低CPU占用
+  delay(10);
 }
+
+
+
