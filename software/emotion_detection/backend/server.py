@@ -4,6 +4,7 @@ from cv_module.run import get_emotion_type
 from datetime import datetime, timedelta
 from backend.llm import generate_emotion_report
 import random
+from playsound import playsound
 app = FastAPI()
 
 # ====== 测试会话缓存 ======
@@ -81,6 +82,7 @@ def data_process(emotion_level, emotion_type='neutral'):
 
 @app.get('/ping')
 async def ping():
+    playsound('/emotion_detection/backend/sounds/start.mp3') #minimax生成音频
     global test_active, test_start_time, test_data_log, test_success, test_done, generated_text
     test_active = True
     test_start_time = datetime.now()

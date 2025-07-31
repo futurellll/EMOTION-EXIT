@@ -1,6 +1,6 @@
 #llm
 
-apikey = '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'
+apikey = 'apikey'
 
 prompt = '''
 你是一位通透的情绪解读者，擅长从微妙波动中洞察人心。
